@@ -75,7 +75,7 @@ class Client
      */
     protected $token = null;
 
-    public function __construct($server = '127.0.0.1:2379', $version = 'v3alpha')
+    public function __construct($server = '127.0.0.1:2379', $version = 'v3alpha', $options = [])
     {
         $this->server = rtrim($server);
         if (strpos($this->server, 'http') !== 0) {
@@ -84,12 +84,12 @@ class Client
         $this->version = trim($version);
 
         $baseUri = sprintf('%s/%s/', $this->server, $this->version);
-        $this->httpClient = new HttpClient(
-            [
-                'base_uri' => $baseUri,
-                'timeout'  => 30,
-            ]
-        );
+        $opts = [
+            'base_uri' => $baseUri,
+            'timeout'  => 30,
+        ];
+        $opts = array_merge($opts, $options);
+        $this->httpClient = new HttpClient($opts);
     }
 
     public function setPretty($enabled)
